@@ -1,0 +1,1232 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyPNcG5fp4OaHI2KYtn3LhLV",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/Jesuusgr072/JesusClase/blob/main/Colab%20con%20Grafico\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# 1) Descargar la base de datos\n",
+        "\n"
+      ],
+      "metadata": {
+        "id": "Isdj_NS17F3n"
+      }
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 1,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "fsut7uRV54Id",
+        "outputId": "4be61545-483e-49c3-a58c-ce08181025da"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Downloading...\n",
+            "From: https://drive.google.com/uc?id=1puf9UBuzaVqMW3ZMMXhd626E5yVJd_QX\n",
+            "To: /content/data_berka.db\n",
+            "100% 70.2M/70.2M [00:00<00:00, 110MB/s]\n"
+          ]
+        }
+      ],
+      "source": [
+        "!gdown 1puf9UBuzaVqMW3ZMMXhd626E5yVJd_QX"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# 1.1) Cargamos la extension SQL (nos permite ejecutar comandos sql directamente en colab)"
+      ],
+      "metadata": {
+        "id": "T784lDFD8EbC"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "%config SqlMagic.style = '_DEPRECATED_DEFAULT'\n",
+        "%load_ext sql"
+      ],
+      "metadata": {
+        "id": "rf8HGFrI8QS3"
+      },
+      "execution_count": 2,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# 1.2) Conectar a la Base de Datos"
+      ],
+      "metadata": {
+        "id": "iHzJDqAs8YCH"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "%sql sqlite:///data_berka.db"
+      ],
+      "metadata": {
+        "id": "gqmnb6RP8jcf"
+      },
+      "execution_count": 3,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# 1.3) Comprobamos el esque de la BBDD para ejecutar comandos sql, se debe añadir \"%%sql comando\" o en multiples lineas \"%%sql comando_linea1, comando_linea2\""
+      ],
+      "metadata": {
+        "id": "4_vilkgG85s_"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "%%sql\n",
+        "SELECT name, type\n",
+        "FROM sqlite_master\n",
+        "WHERE type = \"table\""
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 246
+        },
+        "id": "NEGWK09Y86wn",
+        "outputId": "659f92a8-2374-4e69-eae9-24bfaeb42528"
+      },
+      "execution_count": 4,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            " * sqlite:///data_berka.db\n",
+            "Done.\n"
+          ]
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "[('DISTRICT', 'table'),\n",
+              " ('ACCOUNT', 'table'),\n",
+              " ('TRANS', 'table'),\n",
+              " ('CLIENT', 'table'),\n",
+              " ('DISPOSITION', 'table'),\n",
+              " ('CREDIT_CARD', 'table'),\n",
+              " ('LOAN', 'table'),\n",
+              " ('PERMANENT_ORDER', 'table')]"
+            ],
+            "text/html": [
+              "<table>\n",
+              "    <thead>\n",
+              "        <tr>\n",
+              "            <th>name</th>\n",
+              "            <th>type</th>\n",
+              "        </tr>\n",
+              "    </thead>\n",
+              "    <tbody>\n",
+              "        <tr>\n",
+              "            <td>DISTRICT</td>\n",
+              "            <td>table</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>ACCOUNT</td>\n",
+              "            <td>table</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>TRANS</td>\n",
+              "            <td>table</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>CLIENT</td>\n",
+              "            <td>table</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>DISPOSITION</td>\n",
+              "            <td>table</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>CREDIT_CARD</td>\n",
+              "            <td>table</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>LOAN</td>\n",
+              "            <td>table</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>PERMANENT_ORDER</td>\n",
+              "            <td>table</td>\n",
+              "        </tr>\n",
+              "    </tbody>\n",
+              "</table>"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 4
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# 2) Ejercicios"
+      ],
+      "metadata": {
+        "id": "w1dQpIpYArJJ"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "2.1) Muestre los datos de la tabla cliente"
+      ],
+      "metadata": {
+        "id": "gyjcrhslA1dP"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "%%sql\n",
+        "SELECT *\n",
+        "FROM CLIENT\n",
+        "LIMIT 5;"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 182
+        },
+        "id": "aUB5qC-bA8DX",
+        "outputId": "161539f3-7d89-4ca5-f249-9bcaec5dd0ff"
+      },
+      "execution_count": 5,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            " * sqlite:///data_berka.db\n",
+            "Done.\n"
+          ]
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "[(1, '706213', 18),\n",
+              " (2, '450204', 1),\n",
+              " (3, '406009', 1),\n",
+              " (4, '561201', 5),\n",
+              " (5, '605703', 5)]"
+            ],
+            "text/html": [
+              "<table>\n",
+              "    <thead>\n",
+              "        <tr>\n",
+              "            <th>client_id</th>\n",
+              "            <th>birth_number</th>\n",
+              "            <th>district_id</th>\n",
+              "        </tr>\n",
+              "    </thead>\n",
+              "    <tbody>\n",
+              "        <tr>\n",
+              "            <td>1</td>\n",
+              "            <td>706213</td>\n",
+              "            <td>18</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>2</td>\n",
+              "            <td>450204</td>\n",
+              "            <td>1</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>3</td>\n",
+              "            <td>406009</td>\n",
+              "            <td>1</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>4</td>\n",
+              "            <td>561201</td>\n",
+              "            <td>5</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>5</td>\n",
+              "            <td>605703</td>\n",
+              "            <td>5</td>\n",
+              "        </tr>\n",
+              "    </tbody>\n",
+              "</table>"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 5
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "2.2) Liste todos los clientes con cuentas activas y prestamos, incluyendo dinero prestado y saldos de cuenta"
+      ],
+      "metadata": {
+        "id": "xJGRoUcXBMNY"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "%%sql\n",
+        "SELECT\n",
+        "  c.client_id AS Cliente,\n",
+        "  ROUND(SUM(l.amount), 2) AS Importe_prestado,\n",
+        "  ROUND(SUM(CASE\n",
+        "    WHEN t.type = 'PRIJEM' THEN t.amount\n",
+        "    WHEN t.type = 'VYDAJ' THEN -t.amount\n",
+        "    ELSE 0\n",
+        "  END), 2) AS Balance_cuenta\n",
+        "FROM CLIENT c\n",
+        "LEFT JOIN DISPOSITION d ON d.client_id = c.client_id\n",
+        "LEFT JOIN ACCOUNT a ON a.account_id = d.account_id\n",
+        "LEFT JOIN LOAN l ON l.account_id = a.account_id\n",
+        "LEFT JOIN TRANS t ON t.account_id = a.account_id\n",
+        "WHERE d.type = 'OWNER'\n",
+        "GROUP BY c.client_id\n",
+        "LIMIT 10;"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 289
+        },
+        "id": "8NJgFkuNDhlf",
+        "outputId": "914ee187-c03e-493a-bca7-21e9d2535e6d"
+      },
+      "execution_count": 6,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            " * sqlite:///data_berka.db\n",
+            "Done.\n"
+          ]
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "[(1, None, 13466.5),\n",
+              " (2, 38695056.0, 260069.7),\n",
+              " (4, None, 51096.2),\n",
+              " (6, None, 33720.6),\n",
+              " (7, None, 28088.6),\n",
+              " (8, None, 47667.9),\n",
+              " (9, None, 68495.9),\n",
+              " (10, None, 72617.3),\n",
+              " (12, None, 23877.7),\n",
+              " (13, None, 59295.5)]"
+            ],
+            "text/html": [
+              "<table>\n",
+              "    <thead>\n",
+              "        <tr>\n",
+              "            <th>Cliente</th>\n",
+              "            <th>Importe_prestado</th>\n",
+              "            <th>Balance_cuenta</th>\n",
+              "        </tr>\n",
+              "    </thead>\n",
+              "    <tbody>\n",
+              "        <tr>\n",
+              "            <td>1</td>\n",
+              "            <td>None</td>\n",
+              "            <td>13466.5</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>2</td>\n",
+              "            <td>38695056.0</td>\n",
+              "            <td>260069.7</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>4</td>\n",
+              "            <td>None</td>\n",
+              "            <td>51096.2</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>6</td>\n",
+              "            <td>None</td>\n",
+              "            <td>33720.6</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>7</td>\n",
+              "            <td>None</td>\n",
+              "            <td>28088.6</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>8</td>\n",
+              "            <td>None</td>\n",
+              "            <td>47667.9</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>9</td>\n",
+              "            <td>None</td>\n",
+              "            <td>68495.9</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>10</td>\n",
+              "            <td>None</td>\n",
+              "            <td>72617.3</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>12</td>\n",
+              "            <td>None</td>\n",
+              "            <td>23877.7</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>13</td>\n",
+              "            <td>None</td>\n",
+              "            <td>59295.5</td>\n",
+              "        </tr>\n",
+              "    </tbody>\n",
+              "</table>"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 6
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "2.3) Identifique clientes con multiples cuentas"
+      ],
+      "metadata": {
+        "id": "HR1AAdH1FxqO"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "%%sql\n",
+        "SELECT\n",
+        "  c.client_id AS CLIENTES,\n",
+        "  COUNT(a.account_id) AS NUM_CUENTAS\n",
+        "FROM CLIENT c\n",
+        "JOIN DISPOSITION d ON d.client_id = c.client_id\n",
+        "JOIN ACCOUNT a ON a.account_id = d.account_id\n",
+        "GROUP BY c.client_id\n",
+        "HAVING COUNT(a.account_id) > 1 AND d.type = 'OWNER'\n",
+        "LIMIT 5;"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 75
+        },
+        "id": "OmqJNazOF3Xm",
+        "outputId": "e4f8985e-090f-495e-dc69-7ed3733408be"
+      },
+      "execution_count": 7,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            " * sqlite:///data_berka.db\n",
+            "Done.\n"
+          ]
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "[]"
+            ],
+            "text/html": [
+              "<table>\n",
+              "    <thead>\n",
+              "        <tr>\n",
+              "            <th>CLIENTES</th>\n",
+              "            <th>NUM_CUENTAS</th>\n",
+              "        </tr>\n",
+              "    </thead>\n",
+              "    <tbody>\n",
+              "    </tbody>\n",
+              "</table>"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 7
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "2.4) Recupere transacciones del año 1998, ordenadas por cantidad de transacción, e identifique las 10 transacciones más grandes."
+      ],
+      "metadata": {
+        "id": "FqPW0kNcUDoI"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "%%sql\n",
+        "SELECT\n",
+        "  trans_id AS Transaccion,\n",
+        "  amount AS Cantidad,\n",
+        "  date AS Fecha_transaccion\n",
+        "FROM TRANS\n",
+        "WHERE date LIKE '98%'\n",
+        "ORDER BY amount DESC\n",
+        "LIMIT 10;"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 289
+        },
+        "id": "7hziDDJ1UEgu",
+        "outputId": "bb33cd64-8c84-4682-8782-ef29cc57f25a"
+      },
+      "execution_count": 8,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            " * sqlite:///data_berka.db\n",
+            "Done.\n"
+          ]
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "[(291346, 87400.0, 981215),\n",
+              " (1306770, 87300.0, 980606),\n",
+              " (1207200, 85800.0, 980619),\n",
+              " (1170721, 81900.0, 980615),\n",
+              " (706371, 80100.0, 980610),\n",
+              " (141211, 78300.0, 980625),\n",
+              " (1155373, 78000.0, 980618),\n",
+              " (623347, 77400.0, 980612),\n",
+              " (768915, 77100.0, 980620),\n",
+              " (816974, 76800.0, 980621)]"
+            ],
+            "text/html": [
+              "<table>\n",
+              "    <thead>\n",
+              "        <tr>\n",
+              "            <th>Transaccion</th>\n",
+              "            <th>Cantidad</th>\n",
+              "            <th>Fecha_transaccion</th>\n",
+              "        </tr>\n",
+              "    </thead>\n",
+              "    <tbody>\n",
+              "        <tr>\n",
+              "            <td>291346</td>\n",
+              "            <td>87400.0</td>\n",
+              "            <td>981215</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>1306770</td>\n",
+              "            <td>87300.0</td>\n",
+              "            <td>980606</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>1207200</td>\n",
+              "            <td>85800.0</td>\n",
+              "            <td>980619</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>1170721</td>\n",
+              "            <td>81900.0</td>\n",
+              "            <td>980615</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>706371</td>\n",
+              "            <td>80100.0</td>\n",
+              "            <td>980610</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>141211</td>\n",
+              "            <td>78300.0</td>\n",
+              "            <td>980625</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>1155373</td>\n",
+              "            <td>78000.0</td>\n",
+              "            <td>980618</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>623347</td>\n",
+              "            <td>77400.0</td>\n",
+              "            <td>980612</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>768915</td>\n",
+              "            <td>77100.0</td>\n",
+              "            <td>980620</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>816974</td>\n",
+              "            <td>76800.0</td>\n",
+              "            <td>980621</td>\n",
+              "        </tr>\n",
+              "    </tbody>\n",
+              "</table>"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 8
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "2.5) ¿Cuál es el saldo promedio de cuentas con préstamos en comparación con aquellas sin préstamos?."
+      ],
+      "metadata": {
+        "id": "8QbEzxNhX2qX"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "%%sql\n",
+        "SELECT\n",
+        "  ROUND(AVG(t.balance), 2) AS Saldo_Promedio_Sin_Prestamos\n",
+        "FROM ACCOUNT a\n",
+        "LEFT JOIN TRANS t ON t.account_id = a.account_id\n",
+        "LEFT JOIN LOAN l ON l.account_id = a.account_id\n",
+        "WHERE l.loan_id IS NULL"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 96
+        },
+        "id": "3OILzpn4YUz2",
+        "outputId": "100cca17-045e-40f7-9fef-47f7b8471327"
+      },
+      "execution_count": 9,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            " * sqlite:///data_berka.db\n",
+            "Done.\n"
+          ]
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "[(36979.08,)]"
+            ],
+            "text/html": [
+              "<table>\n",
+              "    <thead>\n",
+              "        <tr>\n",
+              "            <th>Saldo_Promedio_Sin_Prestamos</th>\n",
+              "        </tr>\n",
+              "    </thead>\n",
+              "    <tbody>\n",
+              "        <tr>\n",
+              "            <td>36979.08</td>\n",
+              "        </tr>\n",
+              "    </tbody>\n",
+              "</table>"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 9
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "%%sql\n",
+        "SELECT\n",
+        "  ROUND(AVG(t.balance), 2) AS Saldo_Promedio_Con_Prestamos\n",
+        "FROM ACCOUNT a\n",
+        "LEFT JOIN TRANS t ON t.account_id = a.account_id\n",
+        "LEFT JOIN LOAN l ON l.account_id = a.account_id\n",
+        "WHERE l.loan_id IS NOT NULL"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 96
+        },
+        "id": "Ds5WVJTckHGv",
+        "outputId": "1b94e144-13da-4165-d0b5-ec052be5fa79"
+      },
+      "execution_count": 10,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            " * sqlite:///data_berka.db\n",
+            "Done.\n"
+          ]
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "[(45467.14,)]"
+            ],
+            "text/html": [
+              "<table>\n",
+              "    <thead>\n",
+              "        <tr>\n",
+              "            <th>Saldo_Promedio_Con_Prestamos</th>\n",
+              "        </tr>\n",
+              "    </thead>\n",
+              "    <tbody>\n",
+              "        <tr>\n",
+              "            <td>45467.14</td>\n",
+              "        </tr>\n",
+              "    </tbody>\n",
+              "</table>"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 10
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "2.6) Identifique clientes que hayan realizado más de 10 transacciones en el año 1998 específico pero que no hayan solicitado un préstamo."
+      ],
+      "metadata": {
+        "id": "LhmcGufwdNTv"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "%%sql\n",
+        "SELECT\n",
+        "  c.client_id AS CLIENTE\n",
+        "FROM CLIENT c\n",
+        "LEFT JOIN DISPOSITION d ON d.client_id = c.client_id\n",
+        "LEFT JOIN ACCOUNT a ON a.account_id = d.account_id\n",
+        "LEFT JOIN TRANS t ON t.account_id = a.account_id\n",
+        "LEFT JOIN LOAN l ON l.account_id = a.account_id\n",
+        "WHERE SUBSTR(t.date, 0, 3) = '98' AND l.account_id IS NULL\n",
+        "-- Primero filtra por año y que la cuenta no haya prestamo\n",
+        "GROUP BY c.client_id\n",
+        "HAVING COUNT(t.trans_id) > 10\n",
+        "-- Agrupa por cliente y luego cuenta\n",
+        "LIMIT 10;"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 289
+        },
+        "id": "gK39aWq7dOMu",
+        "outputId": "a80aca9b-3665-4e9c-bb72-fe8ece0139f4"
+      },
+      "execution_count": 11,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            " * sqlite:///data_berka.db\n",
+            "Done.\n"
+          ]
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "[(1,), (4,), (5,), (6,), (7,), (8,), (9,), (10,), (11,), (12,)]"
+            ],
+            "text/html": [
+              "<table>\n",
+              "    <thead>\n",
+              "        <tr>\n",
+              "            <th>CLIENTE</th>\n",
+              "        </tr>\n",
+              "    </thead>\n",
+              "    <tbody>\n",
+              "        <tr>\n",
+              "            <td>1</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>4</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>5</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>6</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>7</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>8</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>9</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>10</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>11</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>12</td>\n",
+              "        </tr>\n",
+              "    </tbody>\n",
+              "</table>"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 11
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "2.7) Segmentar a los clientes en función al saldo de su cuenta (por ejemplo, bajo, medio, alto) y analizar la distribución de solicitudes de préstamos en estos segmentos."
+      ],
+      "metadata": {
+        "id": "tO7AP3wsk9Wu"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "%%sql\n",
+        "SELECT\n",
+        "  ROUND(MIN(balance), 2) AS Min_Balance,\n",
+        "  ROUND(MAX(balance), 2) AS Max_Balance\n",
+        "FROM TRANS;"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 96
+        },
+        "id": "pH6mghWW0xRV",
+        "outputId": "a45e53f8-e10e-4d83-acf1-1b1edef444c7"
+      },
+      "execution_count": 12,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            " * sqlite:///data_berka.db\n",
+            "Done.\n"
+          ]
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "[(-41125.7, 209637.0)]"
+            ],
+            "text/html": [
+              "<table>\n",
+              "    <thead>\n",
+              "        <tr>\n",
+              "            <th>Min_Balance</th>\n",
+              "            <th>Max_Balance</th>\n",
+              "        </tr>\n",
+              "    </thead>\n",
+              "    <tbody>\n",
+              "        <tr>\n",
+              "            <td>-41125.7</td>\n",
+              "            <td>209637.0</td>\n",
+              "        </tr>\n",
+              "    </tbody>\n",
+              "</table>"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 12
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Realizamos la consulta individualizada\n",
+        "Indicando rangos:\n",
+        "> BAJO: de Min a 0\n",
+        "> MEDIO: de 0 a MAX/2\n",
+        "> ALTO: de MAX/2 a MAX"
+      ],
+      "metadata": {
+        "id": "Cr08lHVA1Rq1"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "%%sql\n",
+        "WITH Limits AS (SELECT MAX (balance)/2 AS medium_limit FROM TRANS)\n",
+        "SELECT\n",
+        "  c.client_id,\n",
+        "  t.trans_id,\n",
+        "  t.balance AS last_balance,\n",
+        "  CASE\n",
+        "    WHEN MAX(t.balance) > 0 THEN 'BAJO'\n",
+        "    WHEN MAX(t.balance) > 0 AND MAX(t.balance) >= (SELECT medium_limit FROM Limits) THEN 'MEDIO'\n",
+        "    WHEN MAX(t.balance) > (SELECT medium_limit FROM Limits) THEN 'Alto'\n",
+        "    ELSE 'NAN'\n",
+        "  END AS Calidad_Cliente\n",
+        "FROM CLIENT c\n",
+        "JOIN DISPOSITION d ON d.client_id = c.client_id\n",
+        "JOIN TRANS t ON t.account_id = d.account_id\n",
+        "JOIN (\n",
+        "  SELECT account_id, MAX(trans_id) AS max_trans_id\n",
+        "  FROM TRANS\n",
+        "  GROUP BY account_id\n",
+        ") latest_trans ON t.account_id = latest_trans.account_id AND t.trans_id = latest_trans.max_trans_id\n",
+        "GROUP BY c.client_id\n",
+        "LIMIT 10;"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 289
+        },
+        "id": "fZIEZ-Rn1viF",
+        "outputId": "01126214-8fec-4d63-cb25-7785f031dcaf"
+      },
+      "execution_count": 13,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            " * sqlite:///data_berka.db\n",
+            "Done.\n"
+          ]
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "[(1, 3530482, 13466.5, 'BAJO'),\n",
+              " (2, 3530552, 42628.1, 'BAJO'),\n",
+              " (3, 3530552, 42628.1, 'BAJO'),\n",
+              " (4, 3530570, 51096.1, 'BAJO'),\n",
+              " (5, 3530570, 51096.1, 'BAJO'),\n",
+              " (6, 3530600, 33720.7, 'BAJO'),\n",
+              " (7, 3530615, 28088.3, 'BAJO'),\n",
+              " (8, 3530662, 47668.0, 'BAJO'),\n",
+              " (9, 3530687, 68495.5, 'BAJO'),\n",
+              " (10, 3530726, 72617.2, 'BAJO')]"
+            ],
+            "text/html": [
+              "<table>\n",
+              "    <thead>\n",
+              "        <tr>\n",
+              "            <th>client_id</th>\n",
+              "            <th>trans_id</th>\n",
+              "            <th>last_balance</th>\n",
+              "            <th>Calidad_Cliente</th>\n",
+              "        </tr>\n",
+              "    </thead>\n",
+              "    <tbody>\n",
+              "        <tr>\n",
+              "            <td>1</td>\n",
+              "            <td>3530482</td>\n",
+              "            <td>13466.5</td>\n",
+              "            <td>BAJO</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>2</td>\n",
+              "            <td>3530552</td>\n",
+              "            <td>42628.1</td>\n",
+              "            <td>BAJO</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>3</td>\n",
+              "            <td>3530552</td>\n",
+              "            <td>42628.1</td>\n",
+              "            <td>BAJO</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>4</td>\n",
+              "            <td>3530570</td>\n",
+              "            <td>51096.1</td>\n",
+              "            <td>BAJO</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>5</td>\n",
+              "            <td>3530570</td>\n",
+              "            <td>51096.1</td>\n",
+              "            <td>BAJO</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>6</td>\n",
+              "            <td>3530600</td>\n",
+              "            <td>33720.7</td>\n",
+              "            <td>BAJO</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>7</td>\n",
+              "            <td>3530615</td>\n",
+              "            <td>28088.3</td>\n",
+              "            <td>BAJO</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>8</td>\n",
+              "            <td>3530662</td>\n",
+              "            <td>47668.0</td>\n",
+              "            <td>BAJO</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>9</td>\n",
+              "            <td>3530687</td>\n",
+              "            <td>68495.5</td>\n",
+              "            <td>BAJO</td>\n",
+              "        </tr>\n",
+              "        <tr>\n",
+              "            <td>10</td>\n",
+              "            <td>3530726</td>\n",
+              "            <td>72617.2</td>\n",
+              "            <td>BAJO</td>\n",
+              "        </tr>\n",
+              "    </tbody>\n",
+              "</table>"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 13
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "2.8) Identifique a todos los clientes que incumplieron un préstamo."
+      ],
+      "metadata": {
+        "id": "iEc2kh9ulCJl"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [],
+      "metadata": {
+        "id": "0LK5bQd287-9"
+      },
+      "execution_count": 13,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "2.9) Identifique cualquier característica común (como saldo en cuenta, volumen de transacciones, etc...) entre los clientes que incumplieron."
+      ],
+      "metadata": {
+        "id": "kFwv49hilGRl"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "2.10) Identifique la información que podría ayudar al banco a evaluar el riesgo de préstamos en futuras aplicaciones."
+      ],
+      "metadata": {
+        "id": "dLoUvABznTxP"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "3) Graficos en python"
+      ],
+      "metadata": {
+        "id": "k3lWkLkJSRuV"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Cargamos las librerias necesarias\n",
+        "import pandas as pd\n",
+        "import matplotlib.pyplot as plt"
+      ],
+      "metadata": {
+        "id": "3p52zjDMSXLV"
+      },
+      "execution_count": 25,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Guardamos la consulta sql en una variable local python\n",
+        "%%sql data1 << SELECT * FROM CREDIT_CARD"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "Uk5BES_DUVGe",
+        "outputId": "fe37fc6f-798d-4515-e29c-a722f2d43640"
+      },
+      "execution_count": 17,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            " * sqlite:///data_berka.db\n",
+            "Done.\n",
+            "Returning data to local variable data1\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Transformamos la variable local data1, en un dataframe\n",
+        "dt1 = data1.DataFrame();\n",
+        "# Imprimir la cabecera del dataframe para confirmar los datos\n",
+        "print(dt1.head());"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "lnEEki3SUwSk",
+        "outputId": "3c026de0-2365-42b3-8ec7-90de5f375ef6"
+      },
+      "execution_count": 21,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "   card_id  disp_id     type           issued\n",
+            "0     1005     9285  classic  931107 00:00:00\n",
+            "1      104      588  classic  940119 00:00:00\n",
+            "2      747     4915  classic  940205 00:00:00\n",
+            "3       70      439  classic  940208 00:00:00\n",
+            "4      577     3687  classic  940215 00:00:00\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#Contamos los valores.\n",
+        "counts = dt1['type'].value_counts();\n",
+        "print(counts);"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "5M-qCGvWb5o2",
+        "outputId": "df981065-b8e5-4076-8cd6-1459544b009a"
+      },
+      "execution_count": 23,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "type\n",
+            "classic    659\n",
+            "junior     145\n",
+            "gold        88\n",
+            "Name: count, dtype: int64\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "plt.figure(figsize=(8, 8))\n",
+        "plt.pie(counts.values, labels=counts.index, autopct='%1.1f%%', startangle=90)\n",
+        "plt.title('Distribucion de tipos de tarjerta')\n",
+        "plt.axis('equal')\n",
+        "plt.show();"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 675
+        },
+        "id": "_BBhOZNndzad",
+        "outputId": "82303ed5-95cb-416e-fce4-9cd31c0ae3f7"
+      },
+      "execution_count": 28,
+      "outputs": [
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/plain": [
+              "<Figure size 800x800 with 1 Axes>"
+            ],
+            "image/png": "iVBORw0KGgoAAAANSUhEUgAAAooAAAKSCAYAAABV8fp6AAAAOnRFWHRTb2Z0d2FyZQBNYXRwbG90bGliIHZlcnNpb24zLjEwLjAsIGh0dHBzOi8vbWF0cGxvdGxpYi5vcmcvlHJYcgAAAAlwSFlzAAAPYQAAD2EBqD+naQAAcKZJREFUeJzt3Xd4VGXexvF7Wia9JxASSgi9CWIFEQQUEVRQxLqC3bWsdV272HXddXUt61pee0XX3sWGCAjSe+8lENJ7Zs77RyQSCZCEmTxTvp/r4lImk5l7JoHcPOc8v2OzLMsSAAAA8Ad20wEAAAAQmCiKAAAAaBBFEQAAAA2iKAIAAKBBFEUAAAA0iKIIAACABlEUAQAA0CCKIgAAABpEUQQAAECDKIpAI0yaNEk2m61FnmvIkCEaMmRI3e+///572Ww2vfvuuy3y/Huy2WyaNGlSiz/vvkycOFEdOnRokecKtNfeGB06dNDEiRNNx2iU3d/X33//vekoAPaDooiw89JLL8lms9X9ioyMVJs2bTRixAj9+9//VnFxsU+eZ8uWLZo0aZLmzZvnk8eD73322WdBVwZb0tNPP62XXnrJdIwm4WsK+JbTdADAlHvuuUfZ2dmqrq7Wtm3b9P333+vaa6/Vo48+qo8++kh9+vSpu+/tt9+um2++uUmPv2XLFt19993q0KGD+vbt2+jP++qrr5r0PP5UXl4upzN0/5r47LPP9NRTTzVYLEL9tTfG008/rdTUVL+sUh577LEqLy9XRESETx93f19TAE0X3n8LIqyNHDlShx12WN3vb7nlFn377bcaPXq0TjnlFC1dulRRUVGSJKfT6ffSUFZWpujoaJ//4DwYkZGRpiMYE86v3Z8qKioUEREhu93u0/e4tLRUMTExPns8ALU49AzsYejQobrjjju0fv16vfbaa3W3N3SO4tdff61jjjlGiYmJio2NVdeuXXXrrbdKqj3/6vDDD5ckXXDBBXWHuXcfxhsyZIh69eqlX3/9Vccee6yio6PrPveP5yju5vF4dOutt6p169aKiYnRKaecoo0bN9a7z77OUWvoMSsqKjRp0iR16dJFkZGRysjI0GmnnabVq1fX3aeh8/Tmzp2rkSNHKj4+XrGxsRo2bJhmzJhR7z67D+9PmzZN119/vdLS0hQTE6OxY8dqx44de+VryAcffKBevXopMjJSvXr10vvvv9/g/bxerx577DH17NlTkZGRatWqlS677DLl5+fv9/EnTpyop556qu517v61r9e++3tg2bJlGj9+vOLj45WSkqJrrrlGFRUV9R67pqZG9957r3JycuR2u9WhQwfdeuutqqysrHe/2bNna8SIEUpNTVVUVJSys7N14YUXHvC9sSxL9913n7KyshQdHa3jjjtOixcvbvC+BQUFuvbaa9W2bVu53W516tRJDz/8sLxe736fo0OHDlq8eLF++OGHuvdm9/fQrl27dOONN6p3796KjY1VfHy8Ro4cqfnz59d7jN3nIb711lu6/fbblZmZqejoaBUVFe3zHMWZM2fqxBNPVEJCgqKjozV48GBNmzat3n12fy2WLFmic845R0lJSTrmmGMO+DX9xz/+oQEDBiglJUVRUVHq37+/kXN/gWDCiiLwB3/6059066236quvvtIll1zS4H0WL16s0aNHq0+fPrrnnnvkdru1atWquh9o3bt31z333KM777xTl156qQYNGiRJGjBgQN1j5OXlaeTIkTrrrLN03nnnqVWrVvvNdf/998tms+lvf/ubcnNz9dhjj2n48OGaN29e3cpnY3k8Ho0ePVpTpkzRWWedpWuuuUbFxcX6+uuvtWjRIuXk5OzzdQ8aNEjx8fG66aab5HK59N///ldDhgzRDz/8oCOPPLLe/a+++molJSXprrvu0rp16/TYY4/pqquu0ttvv73ffF999ZVOP/109ejRQw8++KDy8vJ0wQUXKCsra6/7XnbZZXrppZd0wQUX6C9/+YvWrl2rJ598UnPnztW0adPkcrkafI7LLrtMW7Zs0ddff61XX321ke+cNH78eHXo0EEPPvigZsyYoX//+9/Kz8/XK6+8Unefiy++WC+//LLGjRunG264QTNnztSDDz6opUuX1hXe3NxcnXDCCUpLS9PNN9+sxMRErVu3Tv/73/8OmOHOO+/Ufffdp5NOOkknnXSS5syZoxNOOEFVVVX17ldWVqbBgwdr8+bNuuyyy9SuXTv9/PPPuuWWW7R161Y99thj+3yOxx57TFdffbViY2N12223SVLd9+iaNWv0wQcf6IwzzlB2dra2b9+u//73vxo8eLCWLFmiNm3a1Huse++9VxEREbrxxhtVWVm5z1Xzb7/9ViNHjlT//v111113yW6368UXX9TQoUM1depUHXHEEfXuf8YZZ6hz58564IEHZFmW+vXrt9+v6eOPP65TTjlF5557rqqqqvTWW2/pjDPO0CeffKJRo0Yd8H0HwpIFhJkXX3zRkmTNmjVrn/dJSEiw+vXrV/f7u+66y9rzj8u//vUvS5K1Y8eOfT7GrFmzLEnWiy++uNfHBg8ebEmynnnmmQY/Nnjw4Lrff/fdd5YkKzMz0yoqKqq7/Z133rEkWY8//njdbe3bt7cmTJhwwMf8v//7P0uS9eijj+51X6/XW/f/kqy77rqr7vdjxoyxIiIirNWrV9fdtmXLFisuLs469thj627b/R4PHz683uNdd911lsPhsAoKCvZ63j317dvXysjIqHe/r776ypJktW/fvu62qVOnWpKs119/vd7nf/HFFw3e/kdXXnmlta+/Bv/42nd/D5xyyin17nfFFVdYkqz58+dblmVZ8+bNsyRZF198cb373XjjjZYk69tvv7Usy7Lef//9A34fNiQ3N9eKiIiwRo0aVe+9vfXWWy1J9b7+9957rxUTE2OtWLGi3mPcfPPNlsPhsDZs2LDf5+rZs2e975vdKioqLI/HU++2tWvXWm6327rnnnvqbtv9vduxY0errKys3v13f+y7776zLKv2+65z587WiBEj6r2usrIyKzs72zr++OPrbtv9tTj77LP3yra/r+kfM1RVVVm9evWyhg4d2vAbAMDi0DPQgNjY2P3ufk5MTJQkffjhhwc8hLcvbrdbF1xwQaPvf/755ysuLq7u9+PGjVNGRoY+++yzJj/3e++9p9TUVF199dV7fWxfY4A8Ho+++uorjRkzRh07dqy7PSMjQ+ecc45++uknFRUV1fucSy+9tN7jDRo0SB6PR+vXr99ntq1bt2revHmaMGGCEhIS6m4//vjj1aNHj3r3nTx5shISEnT88cdr586ddb/69++v2NhYfffdd/t/I5rhyiuvrPf73e/h7q/D7v9ef/319e53ww03SJI+/fRTSb9/D33yySeqrq5u9PN/8803qqqq0tVXX13vvb322mv3uu/kyZM1aNAgJSUl1Xt/hg8fLo/Hox9//LHRz7snt9stu732x4fH41FeXl7d6Rdz5szZ6/4TJkw44Kr3vHnztHLlSp1zzjnKy8ury1paWqphw4bpxx9/3OvP2uWXX96k3HtmyM/PV2FhoQYNGtRgZgC1OPQMNKCkpETp6en7/PiZZ56p559/XhdffLFuvvlmDRs2TKeddprGjRtX9wP0QDIzM5u0caVz5871fm+z2dSpUyetW7eu0Y+x2+rVq9W1a9cmbdDZsWOHysrK1LVr170+1r17d3m9Xm3cuFE9e/asu71du3b17peUlCRJ+z1/cHeJ/OPrlbRXEVm5cqUKCwv3+bXKzc3dzytqnj/mysnJkd1ur/s6rF+/Xna7XZ06dap3v9atWysxMbHu9Q0ePFinn3667r77bv3rX//SkCFDNGbMGJ1zzjlyu937fP59vT9paWl17+9uK1eu1IIFC5SWltbgYzX3/fF6vXr88cf19NNPa+3atfJ4PHUfS0lJ2ev+2dnZB3zMlStXSqotlftSWFhY7zU25nH39Mknn+i+++7TvHnz6p0v2lIzUoFgRFEE/mDTpk0qLCzc6wf9nqKiovTjjz/qu+++06effqovvvhCb7/9toYOHaqvvvpKDofjgM/T1PMKG2N/q4GNyeRr+3pOy7J88vher1fp6el6/fXXG/z4vgqSL+3rPT9Q+dg9RH3GjBn6+OOP9eWXX+rCCy/UP//5T82YMUOxsbEHnc3r9er444/XTTfd1ODHu3Tp0qzHfeCBB3THHXfowgsv1L333qvk5GTZ7XZde+21Da6wN+Z7fffnPfLII/scJ/XH96Qpf4amTp2qU045Rccee6yefvppZWRkyOVy6cUXX9Qbb7zR6McBwg1FEfiD3SfBjxgxYr/3s9vtGjZsmIYNG6ZHH31UDzzwgG677TZ99913Gj58uM9XKXavuOxmWZZWrVpVb95jUlKSCgoK9vrc9evX1ztcnJOTo5kzZ6q6unqfmz3+KC0tTdHR0Vq+fPleH1u2bJnsdrvatm3byFezb+3bt5e09+uVtNdz5+Tk6JtvvtHAgQObVbyb8zVauXJlvZWsVatWyev11l0xpn379vJ6vVq5cqW6d+9ed7/t27eroKCg7vXtdtRRR+moo47S/fffrzfeeEPnnnuu3nrrLV188cUNPv+e78+eX9MdO3bstVKbk5OjkpISDR8+vMmvU9r3+/Puu+/quOOO0wsvvFDv9oKCAqWmpjbruXZvoIqPj292Xmnfmd977z1FRkbqyy+/rLdi++KLLzb7uYBwwDmKwB6+/fZb3XvvvcrOzta55567z/vt2rVrr9t2r4LsPqS1e6ZbQ8WtOV555ZV6502+++672rp1q0aOHFl3W05OjmbMmFFv9+snn3yy1xid008/XTt37tSTTz651/Psa7XP4XDohBNO0IcffljvcPf27dv1xhtv6JhjjlF8fHxzX16djIwM9e3bVy+//LIKCwvrbv/666+1ZMmSevcdP368PB6P7r333r0ep6am5oDvfXO+RrvHr+z2xBNPSFLd1+Gkk06SpL12FD/66KOSVLe7Nj8/f6/3+o/fQw0ZPny4XC6XnnjiiXqf39AO5vHjx2v69On68ssv9/pYQUGBampq9vk8Uu3709B743A49so+efJkbd68eb+Ptz/9+/dXTk6O/vGPf6ikpGSvjzd2rNK+vqYOh0M2m63eYfJ169bpgw8+aHZmIBywooiw9fnnn2vZsmWqqanR9u3b9e233+rrr79W+/bt9dFHH+13GPA999yjH3/8UaNGjVL79u2Vm5urp59+WllZWTrmmGMk1Za2xMREPfPMM4qLi1NMTIyOPPLIJp9XtVtycrKOOeYYXXDBBdq+fbsee+wxderUqd4In4svvljvvvuuTjzxRI0fP16rV6/Wa6+9tte4m/PPP1+vvPKKrr/+ev3yyy8aNGiQSktL9c033+iKK67Qqaee2mCG++67r25+5BVXXCGn06n//ve/qqys1N///vdmva6GPPjggxo1apSOOeYYXXjhhdq1a5eeeOIJ9ezZs16JGDx4sC677DI9+OCDmjdvnk444QS5XC6tXLlSkydP1uOPP65x48bt83n69+8vSfrLX/6iESNGyOFw6KyzztpvtrVr1+qUU07RiSeeqOnTp+u1117TOeeco0MOOUSSdMghh2jChAl69tlnVVBQoMGDB+uXX37Ryy+/rDFjxui4446TJL388st6+umnNXbsWOXk5Ki4uFjPPfec4uPj68pmQ9LS0nTjjTfqwQcf1OjRo3XSSSdp7ty5+vzzz/dazfvrX/+qjz76SKNHj9bEiRPVv39/lZaWauHChXr33Xe1bt26/a4A9u/fX//5z3903333qVOnTkpPT9fQoUM1evRo3XPPPbrgggs0YMAALVy4UK+//nq9Fc6mstvtev755zVy5Ej17NlTF1xwgTIzM7V582Z99913io+P18cff3zAx9nX13TUqFF69NFHdeKJJ+qcc85Rbm6unnrqKXXq1EkLFixodm4g5Jnccg2YsHt0y+5fERERVuvWra3jjz/eevzxx+uNoNntj+NxpkyZYp166qlWmzZtrIiICKtNmzbW2WefvdcYkg8//NDq0aOH5XQ6643KGTx4sNWzZ88G8+1rPM6bb75p3XLLLVZ6eroVFRVljRo1ylq/fv1en//Pf/7TyszMtNxutzVw4EBr9uzZez2mZdWOCrntttus7Oxsy+VyWa1bt7bGjRtXb/SN/jAixrIsa86cOdaIESOs2NhYKzo62jruuOOsn3/+ucH3+I+jX/44EmV/3nvvPat79+6W2+22evToYf3vf/+zJkyYUG88zm7PPvus1b9/fysqKsqKi4uzevfubd10003Wli1b9vscNTU11tVXX22lpaVZNput3tf4j6999/fAkiVLrHHjxllxcXFWUlKSddVVV1nl5eX1Hre6utq6++67697btm3bWrfccotVUVFRd585c+ZYZ599ttWuXTvL7XZb6enp1ujRo63Zs2cf8L3xeDzW3XffbWVkZFhRUVHWkCFDrEWLFjU4Hqm4uNi65ZZbrE6dOlkRERFWamqqNWDAAOsf//iHVVVVtd/n2bZtmzVq1CgrLi7OklT3PVRRUWHdcMMNdc8/cOBAa/r06fv83p08efJej72v74W5c+dap512mpWSkmK53W6rffv21vjx460pU6bU3Wf316Kh8VT7+5q+8MILVufOnS23221169bNevHFF/f6sw2gPptl+eiscgAIYZMmTdLdd9+tHTt2NPs8PPxuypQpGj58uKZOnVq3Cg8g8HCOIgCgxW3dulWSKN1AgOMcRQBAiyktLdXrr7+uxx9/XFlZWc0e0QOgZbCiCABoMTt27NDVV1+tqKgovffee40eUA/ADM5RBAAAQIP4pxwAAAAaRFEEAABAgyiKAAAAaBBFEQAAAA2iKAIAAKBBFEUAAAA0iKIIAACABlEUAQAA0CCKIgAAABpEUQQABKWXXnpJiYmJ+73PpEmT1Ldv3xbJA4QiiiIAAAAaRFEEAABAgyiKAAAjiouLde655yomJkYZGRn617/+pSFDhujaa6+VJOXn5+v8889XUlKSoqOjNXLkSK1cuXK/j/nQQw+pVatWiouL00UXXaSKiooWeCVA6KIoAgCMuP766zVt2jR99NFH+vrrrzV16lTNmTOn7uMTJ07U7Nmz9dFHH2n69OmyLEsnnXSSqqurG3y8d955R5MmTdID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tW+m6RjwM4piELvr5B465ZA2pmMAAMLM+Ue354IQYYKiGMRsNpv+Of4QDerMsj8AoGWc0KOVJp3c03QMtBCKYpBz/XYi8aHtEk1HAQCEuH7tEvXvs/vJzvSNsEFRDAHREU69dOER6tkm3nQUAECIyk6N0QsTDleky2E6CloQRTFExEe69OpFR6pzeqzpKACAEJOVFKVXLjxCyTERpqOghVEUQ0hyTIRev/hIdUiJNh0FABAi2qdE6+3LjlbbZH62hCOKYohJj4/U65ccpczEKNNRAABBrmNqjN6+9Gh+poQximIIykyM0msXH6m0OLfpKACAINUpPVZvXXoUl+YLcxTFEJWdGqPXLz5SSdFcoB0A0DRdW8XprUuPUno8JTHcURRDWJdWcXr1oiOVSFkEADRS94x4vXnpUUqN5agUJJtlWZbpEPCvFduL9acXZmp7UaXpKACAANY7M0GvXnSEEqPZ3YxaFMUwsXFXmc57YabW55WZjgIACECHtE3UKxceoYQojkLhdxTFMJJbXKHzX/hFy7YVm44CAAgg/dsn6aULDldcJCUR9VEUw0xhebUufGmWfl2fbzoKACAAHJGdrBcnHq4Yt9N0FAQgimIYKq/y6PLXftUPK3aYjgIAMGhATopemHC4oiK4LB8aFtK7ntetWyebzaZ58+b5/bleeuklJSYm+v15fCEqwqHnJxymkw9pYzoKAMCQQZ1T9X8TKYnYv5Auii3pzDPP1IoVK0zHaDSXw67Hz+yrc49sZzoKAKCFHdc1Tc9POEyRLkoi9o8TEnwkKipKUVHBdYkju92m+8f2VmK0S099t9p0HABACxjevZWePvdQRThZK8KBhcR3idfr1d///nd16tRJbrdb7dq10/3337/X/Twejy666CJlZ2crKipKXbt21eOPP17vPt9//72OOOIIxcTEKDExUQMHDtT69eslSfPnz9dxxx2nuLg4xcfHq3///po9e7akhg89f/zxxzr88MMVGRmp1NRUjR071j9vwEH664huun1Ud9lsppMAAPzplEPa6D/nURLReCGxonjLLbfoueee07/+9S8dc8wx2rp1q5YtW7bX/bxer7KysjR58mSlpKTo559/1qWXXqqMjAyNHz9eNTU1GjNmjC655BK9+eabqqqq0i+//CLbbw3q3HPPVb9+/fSf//xHDodD8+bNk8vV8CiBTz/9VGPHjtVtt92mV155RVVVVfrss8/8+j4cjIsHdVR8lEu3/G+hPF72NwFAqPnLsM66bnjnup9pQGME/a7n4uJipaWl6cknn9TFF19c72Pr1q1Tdna25s6dq759+zb4+VdddZW2bdumd999V7t27VJKSoq+//57DR48eK/7xsfH64knntCECRP2+thLL72ka6+9VgUFBZKkAQMGqGPHjnrttdcO+jW2pC8WbdNf3pqrqhqv6SgAAB+IcNr1yLg+OrVvpukoCEJBv/a8dOlSVVZWatiwYY26/1NPPaX+/fsrLS1NsbGxevbZZ7VhwwZJUnJysiZOnKgRI0bo5JNP1uOPP66tW7fWfe7111+viy++WMOHD9dDDz2k1av3fV7fvHnzGp0pkJzYq7Vemni4YtgFBwBBLzU2Qm9eciQlEc0W9EWxKRtI3nrrLd1444266KKL9NVXX2nevHm64IILVFVVVXefF198UdOnT9eAAQP09ttvq0uXLpoxY4YkadKkSVq8eLFGjRqlb7/9Vj169ND7779/0LkCzYBOqXrjkqOUFM2EfgAIVl1axer9Kwaqf/tk01EQxIK+KHbu3FlRUVGaMmXKAe87bdo0DRgwQFdccYX69eunTp06Nbgq2K9fP91yyy36+eef1atXL73xxht1H+vSpYuuu+46ffXVVzrttNP04osvNvhcffr0aVSmQHVI20RNvvxotU0O3sILAOHq2C5peu/PA9Q2Odp0FAS5oC+KkZGR+tvf/qabbrpJr7zyilavXq0ZM2bohRde2Ou+nTt31uzZs/Xll19qxYoVuuOOOzRr1qy6j69du1a33HKLpk+frvXr1+urr77SypUr1b17d5WXl+uqq67S999/r/Xr12vatGmaNWuWunfv3mCuu+66S2+++abuuusuLV26VAsXLtTDDz/st/fBHzqlx+njq47RMZ1STUcBADTS+Ue314sTuW4zfCMkdj3fcccdcjqduvPOO7VlyxZlZGTo8ssv3+t+l112mebOnaszzzxTNptNZ599tq644gp9/vnnkqTo6GgtW7ZML7/8svLy8pSRkaErr7xSl112mWpqapSXl6fzzz9f27dvV2pqqk477TTdfffdDWYaMmSIJk+erHvvvVcPPfSQ4uPjdeyxx/r1ffCHxOgIvXzhEXr4i2V69sc1puMAAPbBYbfpjlHdNXFgtukoCCFBv+sZLefDeZt183sLVV7tMR0FALCHWLdTT5zTT8d1TTcdBSGGoogmWbKlSJe+Olub8stNRwEASMpMjNL/TTxcXVvHmY6CEERRRJPll1bp6jfn6qdVO01HAYCw1q9dop47/zClxrpNR0GIoiiiWTxeSw99vlTPTV1rOgoAhKWTD2mjR8b1UaSLubfwH4oiDsqH8zbrb+8tUEU1V3IBgJbC5fjQUiiKOGiLtxTqsld/5bxFAPCzKJdDD53emyutoMVQFOET+aVVuurNOZq2Ks90FAAISd0z4vXE2f3UKT3WdBSEEYoifMbjtfTgZ0v1/E+ctwgAvjRxQAfdclI3uZ2cj4iWRVGEz3HeIgD4RlK0S38fd4iO79HKdBSEKYoi/GLR5trzFjcXcN4iADTHkdnJevysfmqdEGk6CsIYRRF+k19apb+9t0BfLdluOgoABA2H3aZrhnXWVcd1kt3OrmaYRVGE302evVH3fLxExZU1pqMAQEDLTIzSY2f11eEdkk1HASRRFNFCNheU68Z35mv6GnZFA0BDTuzZWg+f3kcJ0S7TUYA6FEW0GMuy9H/T1unvXyxTZQ0bXQBAktxOu+4Y3UPnHdXedBRgLxRFtLhVucW6/p35WrCp0HQUADCqS6tYPXH2oeraOs50FKBBFEUYUePx6olvV+mp71apxsu3IIDwc86R7XTn6B5cqxkBjaIIoxZsKtB1b8/T6h2lpqMAQIuIj3TqodP76KTeGaajAAdEUYRxFdUePfT5Mr08fZ34bgQQyo7MTtajZ/ZVZmKU6ShAo1AUETB+XrVTN06ery2FFaajAIBPJUW7dMvI7jrjsCzZbMxGRPCgKCKgFFVUa9JHi/W/OZtNRwEAnzjt0EzdPqqHkmMiTEcBmoyiiID0xaJtuu39hcorrTIdBQCapWNqjO4b20sDclJNRwGajaKIgLWjuFK3vr9QX3MJQABBJMJp158H5+iK43LkdrKjGcGNooiA982S7br30yVan1dmOgoA7NdRHZN1/9jeykmLNR0F8AmKIoJCZY1Hz09dq6e+W6WyKo/pOABQT3JMhG49qbvG9c8yHQXwKYoigsq2wgo98NlSfTR/i+koACBJOqN/lm49qbuS2KyCEERRRFCatW6X7vpwsZZsLTIdBUCYykmL0f1je+uojimmowB+Q1FE0PJ6Lb3xywb986vlyi+rNh0HQJhwO+268rhOunxwjiKcdtNxAL+iKCLoFZZV659fL9frMzfIw3WjAfjRwE4pum9Mb2WnxpiOArQIiiJCxtKtRZr00WLNXLvLdBQAIaZtcpRuPKGrTu2baToK0KIoigg5H8/fogc/W8qlAAEctLQ4t64e2klnHd6Ow8wISxRFhKTyKo+e/n6V/vvjGlXVeE3HARBk4iOdumxwji4cmK2oCIZmI3xRFBHSNuSV6d5Pl3B1FwCNEuVyaMKADvrz4BwlRLtMxwGMoygiLMxYk6fHv1mp6WvyTEcBEIBcDpvOOrydrh7aSenxkabjAAGDooiw8svaXfr3lJX6adVO01EABAC7TTrlkDa6/viuapcSbToOEHAoighLv67P17+nrNQPK3aYjgLAkOHd03XjiK7q1jredBQgYFEUEdbmbSzQv6es1LfLck1HAdBCjsxO1k0ndlP/9kmmowABj6IISFq0uVCPT1nJphcghPXKjNdfR3TT4C5ppqMAQYOiCOxh8ZZCPTFllb5csk38yQBCQ8e0GN1wfFed1Lu1bDab6ThAUKEoAg1Ytq1IT0xZpc8XbRVXBQSC05HZybrwmGwd372V7HYKItAcFEVgP1ZuL9YT367SJwu2UBiBIBDhtOvkPm104TEd1LNNguk4QNCjKAKNsHpHiZ78dpU+mr9FHhojEHBSYyN07pHtdd5R7ZUW5zYdBwgZFEWgCTbklen1X9Zr8uxN2lVaZToOEPa6Z8TrwoEddErfNnI7udQe4GsURaAZqmq8+nzRVr0+c4N+WbvLdBwgrNht0tBurXThMR00ICfVdBwgpFEUgYO0KrdYr83YoP/N2aSiihrTcYCQFet2alz/LF0wsIPap8SYjgOEBYoi4CMV1R59NH+LXp+5QfM3FpiOA4SMtslRmnB0B515eFvFRbpMxwHCCkUR8INFmwv1+swN+mjeZpVWeUzHAYLSER1qx9uc0IPxNoApFEXAj0oqa/T+3M16fcZ6LdtWbDoOEPBSY906tW8bnX5olnq04RrMgGkURaCF/Lo+X6/PXK9PF2xVZY3XdBwgYLiddh3fo5VOPzRLx3ZJk4PVQyBgUBSBFlZYVq3Jv27UW7M2alVuiek4gBE2m3R4+2SddmimTuqToXjOPQQCEkURMGjl9mJ9vmibPl+0TUu3FpmOA/hdx9QYndK3jU7rl6V2KdGm4wA4AIoiECDW7SzVF4trSyO7phFK2iZHaXSfNhrdJ4PL6gFBhqIIBKAtBeX6YtE2fbFom2av38V1phF02iREalSfDI3u00aHtE00HQdAM1EUgQCXW1yhrxZv1xeLtmnGmjzV0BoRoNLj3Dqpd4ZOPiRDh7ZLks3GphQg2FEUgSCSX1qlr5fWlsafVu5UlYfd0zAnwmHXoe0TNahzmo7tnKZemfGUQyDEUBSBIFVcUa1vl+Xq84Xb9MOKHSqvZrA3/C8nLaa2GHZJ1VEdUxQd4TQdCYAfURSBEFBe5dGMNXn6efVO/bw6T0u3FnFeI3wiMdqlgZ1SdWznVA3qnKY2iVGmIwFoQRRFIAQVlFX9VhzzNH11nlYyrxGN5HLY1K9tkgZ1TtWgLmnqk5nA5fOAMEZRBMJAbnGFpv9WGn9Zu0trdpaajoQAkp0aU1sMO6fp6JwUxbo5nAygFkURCEM7Syr16/p8zV63S7PX52vR5kJVe/irIBxEOO3q2ipOvTITdEhWggZ2SlXbZAZfA2gYRRGAKqo9mrexQL+uz9esdbs0Z32+iipqTMfCQYp02dWtdbx6ZyaoV2a8emUmqEurOLkcdtPRAAQJiiKAvViWpQ27yrRie4lWbC/+7VeJVu8oUVUNI3kCUXSEQz0yastgr8wE9c5MUKf0WDk4vxDAQaAoAmg0j9fSurxSrfytOO4ukWt3lnLougXFuZ3q0Wb3SmHtr46pMWw6AeBzFEUAB63a49W6naVa/luBXPlbgVyXVyYPc3qaJcrlUGZSlDITo5SVFKXMpCi1T45Rjzbx6pASzWBrAC2CogjAbyprPFqzo1QrthdrfV6ZcosrtKO4UrnFldrx26/KMD2UHRfprCuBWUnR9QphZmKUUmLdpiMCAEURgFmF5dW/lceKuvK4+1ddoSypVH5ZlYLhb6sIp10xEQ7FuJ1Kio7YqwBmJUUrMylKCVEu01EB4IAoigCCQrXHq50llcotqi2PeaWVqqrxqspjqdrjVXWNV9XePf7f89vvd///7vvt5/9dDrti3U7FuJ2KdTsV/Vvhi3U7Fe121H4sovbjMe7fPxbjdtaVQ3YUAwglFEUAAAA0iH/6AgAAoEEURQAAADSIoggAAIAGURQBAADQIIoiAAAAGkRRBAAAQIMoigAAAGgQRREAAAANoigCAACgQRRFAAAANIiiCAAAgAZRFAEAANAgiiIAAAAaRFEEAABAgyiKAAAAaBBFEQAAAA2iKAIAAKBBFEUAAAA0iKIIAACABlEUAQAA0CCKIgAAABpEUQQAAECDKIoAAABoEEURAAAADaIoAgAAoEEURQAAADSIoggAAIAGURQBAADQIIoiAAAAGkRRBAAAQIMoigAAAGgQRREAAAANoigCAACgQRRFAAAANIiiCAAAgAb9P6F4gtJ52UZtAAAAAElFTkSuQmCC\n"
+          },
+          "metadata": {}
+        }
+      ]
+    }
+  ]
+}
